@@ -13,9 +13,14 @@ class HomePageTest(LiveServerTestCase):
         options = Options()
         headless = bool(int(os.environ.get('HEADLESS', 1)))
         if headless:
-            options.add_argument('--headless')
+            options.set_headless(True)
         driver_path = os.path.join(os.environ['HOME'], 'tools', 'selenium', 'geckodriver')
-        return webdriver.Firefox(firefox_options=options, executable_path=driver_path)
+        driver = webdriver.Firefox(
+            firefox_options=options,
+            executable_path=driver_path,
+            log_path=os.path.join('logs', 'geckodriver.log')
+        )
+        return driver
 
     @staticmethod
     def chrome_driver():
