@@ -8,16 +8,24 @@ from selenium.webdriver.firefox.options import Options
 class HomePageTest(LiveServerTestCase):
     driver = None
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    @staticmethod
+    def firefox_driver():
         options = Options()
         headless = bool(int(os.environ.get('HEADLESS', 1)))
         if headless:
             options.add_argument('--headless')
         driver_path = os.path.join(os.environ['HOME'], 'tools', 'selenium', 'geckodriver')
-        driver = webdriver.Firefox(firefox_options=options, executable_path=driver_path)
-        cls.driver = driver
+        return webdriver.Firefox(firefox_options=options, executable_path=driver_path)
+
+    @staticmethod
+    def chrome_driver():
+        driver_path = os.path.join(os.environ['HOME'], 'tools', 'selenium', 'chromedriver')
+        return webdriver.Chrome(driver_path)
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.driver = cls.firefox_driver()
 
     @classmethod
     def tearDownClass(cls):
